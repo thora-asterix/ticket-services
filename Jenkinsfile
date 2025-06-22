@@ -24,7 +24,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 bat "docker build -t %IMAGE_NAME%:latest ."
-                bat bat "docker tag ticket-services:latest ttrialkhqq62.jfrog.io/ticket-services-docker-local/ticket-services:latest"
+                bat "docker tag ticket-services:latest ttrialkhqq62.jfrog.io/ticket-services-docker-local/ticket-services:latest"
             }
         }
 
