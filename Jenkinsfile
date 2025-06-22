@@ -16,22 +16,22 @@ pipeline {
 
         stage('Build JAR') {
             steps {
-                sh './gradlew clean build'
+                bat './gradlew clean build'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:latest ."
-                sh "docker tag ${IMAGE_NAME}:latest ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
+                bat "docker build -t ${IMAGE_NAME}:latest ."
+                bat "docker tag ${IMAGE_NAME}:latest ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
             }
         }
 
         stage('Push to JFrog') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jfrog-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh "echo $PASSWORD | docker login ${DOCKER_REGISTRY} -u $USERNAME --password-stdin"
-                    sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
+                    bat "echo $PASSWORD | docker login ${DOCKER_REGISTRY} -u $USERNAME --password-stdin"
+                    bat "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
                 }
             }
         }
