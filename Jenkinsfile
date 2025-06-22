@@ -2,16 +2,15 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "ticket-services"
-        REGISTRY_HOST = "ttrialkhqq62.jfrog.io"
-        REPO_PATH = "%REGISTRY_HOST%/ticket-services-docker-local"
-        JFROG_CREDENTIALS = credentials('jfrog-docker')
+        IMAGE_NAME    = 'ticket-services'
+        REGISTRY_HOST = 'ttrialkhqq62.jfrog.io' // Replace with your actual JFrog domain
+        REPO_PATH     = "${env.REGISTRY_HOST}/ticket-services-docker-local"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/thora-asterix/ticket-services.git', credentialsId: 'github-creds'
+                git credentialsId: 'github-creds', url: 'https://github.com/thora-asterix/ticket-services.git'
             }
         }
 
@@ -23,16 +22,20 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %IMAGE_NAME%:latest ."
-                bat "docker tag ticket-services:latest ttrialkhqq62.jfrog.io/ticket-services-docker-local/ticket-services:latest"
+                bat "docker build -t ${env.IMAGE_NAME}:latest ."
+                bat "docker tag ${env.IMAGE_NAME}:latest ${env.REPO_PATH}/${env.IMAGE_NAME}:latest"
             }
         }
 
         stage('Push to JFrog') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'jfrog-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    bat "echo %PASSWORD% | docker login %REGISTRY_HOST% -u %USERNAME% --password-stdin"
-                    bat "docker push %REPO_PATH%/%IMAGE_NAME%:latest"
+                withCredentials([usernamePassword(
+                    credentialsId: 'jfrog-docker',
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                )]) {
+                    bat "echo ${env.PASSWORD} | docker login ${env.REGISTRY_HOST} -u ${env.USERNAME} --password-stdin"
+                    bat "docker push ${env.REPO_PATH}/${env.IMAGE_NAME}:latest"
                 }
             }
         }
