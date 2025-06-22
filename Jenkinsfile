@@ -35,7 +35,7 @@ pipeline {
                     passwordVariable: 'PASSWORD'
                 )]) {
                     bat "echo ${env.PASSWORD} | docker login ${env.REGISTRY_HOST} -u ${env.USERNAME} --password-stdin"
-                    bat "docker push ${env.REPO_PATH}/${env.IMAGE_NAME}:latest"
+                    bat "docker push ttrialkhqq62.jfrog.io/ticket-services-docker-local/ticket-services:latest"
                 }
             }
         }
