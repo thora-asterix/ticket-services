@@ -3,7 +3,8 @@ pipeline {
 
     environment {
         IMAGE_NAME = "ticket-services"
-        DOCKER_REGISTRY = "ttrialkhqq62.jfrog.io/ticket-services-docker-local"
+        REGISTRY_HOST = "ttrialkhqq62.jfrog.io"
+        REPO_PATH = "{$REGISTRY_HOST}/ticket-services-docker-local"
         JFROG_CREDENTIALS = credentials('jfrog-docker')
     }
 
